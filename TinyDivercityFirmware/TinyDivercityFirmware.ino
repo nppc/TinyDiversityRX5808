@@ -1,3 +1,5 @@
+//#define DEBUG
+
 
 #include <EEPROM.h>
 
@@ -43,12 +45,20 @@ unsigned long diversityHysteresisTimer;
 
 enum ReceiverSelelct: byte {RX_A, RX_B};
 
+// some macros
+#define LED_A_ON bitClear(PORTB, PIN_LED_A) // LED A ON
+#define LED_B_ON bitClear(PORTB, PIN_LED_B) // LED B ON
+#define LED_A_OFF bitSet(PORTB, PIN_LED_A) // LED A OFF
+#define LED_B_OFF bitSet(PORTB, PIN_LED_B) // LED B OFF
+
+
 void setupPins() {
 
     bitSet(DDRB, PIN_SWITCH_VIDEO);
 	bitSet(DDRB, PIN_LED_A);
 	bitSet(DDRB, PIN_LED_B);
-	bitSet(PORTB, PIN_LED_A);
+	LED_A_OFF;
+	LED_B_OFF;
 	bitSet(PORTB, PIN_LED_B);
 	bitSet(PORTB, PIN_RSSI_A);
 	bitSet(PORTB, PIN_RSSI_B);
@@ -99,12 +109,9 @@ void setup()
 void setActiveReceiver(ReceiverSelelct Set_RX){
 	activeReceiver = Set_RX;
 	if(activeReceiver == RX_A){bitClear(PORTB, PIN_SWITCH_VIDEO);}else{bitSet(PORTB, PIN_SWITCH_VIDEO);};
-	//digitalWrite(PIN_SWITCH_VIDEO, (activeReceiver == RX_A ? LOW : HIGH));
 	// change status of leds
-	if(activeReceiver == RX_A){bitClear(PORTB, PIN_LED_A);}else{bitSet(PORTB, PIN_LED_A);};
-	if(activeReceiver == RX_B){bitClear(PORTB, PIN_LED_B);}else{bitSet(PORTB, PIN_LED_B);};
-	//digitalWrite(PIN_LED_A,(activeReceiver == RX_A ? LOW : HIGH));
-	//digitalWrite(PIN_LED_B,(activeReceiver == RX_B ? LOW : HIGH));
+	if(activeReceiver == RX_A){LED_A_ON;}else{LED_A_OFF;}
+	if(activeReceiver == RX_B){LED_B_ON;}else{LED_B_OFF;}
 }
 
 
@@ -185,12 +192,19 @@ void readEEPROMSettings(){
 	rssiBMax=readEEPROMint(EEPROM_MAX_RSSI_B_ADDR);
 }
 
-int readEEPROMint(byte addr){
+int readEEPROMint(uint8_t addr){
 	return EEPROM.read(addr)+EEPROM.read(addr+1)*256;
 }
 
+void writeEEPROMint(uint8_t addr, uint16_t value){
+	EEPROM.update(addr, lowByte(value));
+	EEPROM.update(addr+1, highByte(value));
+}
+
 void doCalibration(){
-	// at the moment lets just eneter DEBUG mode (switch video source every second)
+
+#if defined(DEBUG)
+	// switch video source every second in DEBUG mode
 	while(1==1){
 		//delay(1000);
 		mDelay(1000);
@@ -199,9 +213,79 @@ void doCalibration(){
 		mDelay(1000);
 		setActiveReceiver(RX_B);
 	}
+
+#else
+	// Calibration routine
+	// 1. Wait for lowest RSSI while some period (short blinks). Record min value.
+	// 2. If RSSI changed drammatically, then wait a bit (2 seconds)
+	// 3. Wait for highrst RSSI while some period (long blinks). Record max value.
+	// 4. Store calibration data in EEPROM
+	unsigned long tmr_tmp;
+	uint16_t curMinRSSIA=1023; // max 10 bit ADC value is 1023
+	uint16_t curMinRSSIB=1023; // max 10 bit ADC value is 1023
+	uint16_t curMaxRSSIA=0;
+	uint16_t curMaxRSSIB=0;
+	// about 10 blinks for capturing low signal
+	for(uint8_t i=0;i<10;i++){
+		LED_A_ON;
+		LED_B_ON;
+		tmr_tmp = millis();
+		while((tmr_tmp+100)>millis()){}
+		LED_A_OFF;
+		LED_B_OFF;
+		tmr_tmp = millis();
+		while((tmr_tmp+700)>millis()){
+			updateRssi();	// refresh RSSI RAW values
+			if(rssiARaw<curMinRSSIA)curMinRSSIA = rssiARaw;
+			if(rssiBRaw<curMinRSSIB)curMinRSSIB = rssiBRaw;
+		}
+	}
+	// Now wait until RSSI will jump for a good degree (100 ADC values) for both receivers
+	while((rssiARaw<curMinRSSIA+100) && (rssiBRaw<curMinRSSIB+100)){
+		LED_A_ON;
+		LED_B_ON;
+		tmr_tmp = millis();
+		while((tmr_tmp+100)>millis()){}
+		LED_A_OFF;
+		LED_B_OFF;
+		tmr_tmp = millis();
+		while((tmr_tmp+1500)>millis()){updateRssi();}
+	}
+	LED_A_ON;
+	LED_B_ON;
+	// Now just a delay for 2 secind
+	mDelay(2000);
+	// about 10 blinks for capturing high signal
+	for(uint8_t i=0;i<10;i++){
+		LED_A_ON;
+		LED_B_ON;
+		tmr_tmp = millis();
+		while((tmr_tmp+700)>millis()){
+			updateRssi();	// refresh RSSI RAW values
+			if(rssiARaw>curMaxRSSIA)curMaxRSSIA = rssiARaw;
+			if(rssiBRaw>curMaxRSSIB)curMaxRSSIB = rssiBRaw;
+		}
+		LED_A_OFF;
+		LED_B_OFF;
+		tmr_tmp = millis();
+		while((tmr_tmp+100)>millis()){}
+	}
+	// Now it is time to store values to EEPROM
+	LED_A_ON;
+	LED_B_ON;
+	writeEEPROMint(EEPROM_MIN_RSSI_A_ADDR,curMinRSSIA);
+	writeEEPROMint(EEPROM_MAX_RSSI_A_ADDR,curMaxRSSIA);
+	writeEEPROMint(EEPROM_MIN_RSSI_B_ADDR,curMinRSSIB);
+	writeEEPROMint(EEPROM_MAX_RSSI_B_ADDR,curMaxRSSIB);
+	LED_A_OFF;
+	LED_B_OFF;
+
+#endif
 }
 
+
+
 void mDelay(int dtmp){
-unsigned long tmp = millis();
-while(tmp+dtmp>millis()){}
+	unsigned long tmp = millis();
+	while((tmp+dtmp)>millis()){}
 }
