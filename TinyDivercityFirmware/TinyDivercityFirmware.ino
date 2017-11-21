@@ -108,10 +108,15 @@ void setup()
 
 void setActiveReceiver(ReceiverSelelct Set_RX){
 	activeReceiver = Set_RX;
-	if(activeReceiver == RX_A){bitClear(PORTB, PIN_SWITCH_VIDEO);}else{bitSet(PORTB, PIN_SWITCH_VIDEO);};
-	// change status of leds
-	if(activeReceiver == RX_A){LED_A_ON;}else{LED_A_OFF;}
-	if(activeReceiver == RX_B){LED_B_ON;}else{LED_B_OFF;}
+	if(activeReceiver == RX_A){
+		bitClear(PORTB, PIN_SWITCH_VIDEO);
+		LED_A_ON;
+		LED_B_OFF;
+	}else{
+		bitSet(PORTB, PIN_SWITCH_VIDEO);
+		LED_A_OFF;
+		LED_B_ON;
+	}
 }
 
 
