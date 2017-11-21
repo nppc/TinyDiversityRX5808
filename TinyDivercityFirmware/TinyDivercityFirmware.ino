@@ -246,8 +246,8 @@ void doCalibration(){
 		mDelay(100);
 		LED_A_OFF;
 		LED_B_OFF;
-		tmr_tmp = millis();
-		while((tmr_tmp+1500)>millis()){updateRssi();}
+		mDelay(1500);
+		updateRssi();
 	}
 	LED_A_ON;
 	LED_B_ON;
