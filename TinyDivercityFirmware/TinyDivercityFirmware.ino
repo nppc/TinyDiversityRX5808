@@ -229,8 +229,7 @@ void doCalibration(){
 	for(uint8_t i=0;i<10;i++){
 		LED_A_ON;
 		LED_B_ON;
-		tmr_tmp = millis();
-		while((tmr_tmp+100)>millis()){}
+		mDelay(100);
 		LED_A_OFF;
 		LED_B_OFF;
 		tmr_tmp = millis();
@@ -244,8 +243,7 @@ void doCalibration(){
 	while((rssiARaw<curMinRSSIA+100) && (rssiBRaw<curMinRSSIB+100)){
 		LED_A_ON;
 		LED_B_ON;
-		tmr_tmp = millis();
-		while((tmr_tmp+100)>millis()){}
+		mDelay(100);
 		LED_A_OFF;
 		LED_B_OFF;
 		tmr_tmp = millis();
@@ -253,7 +251,7 @@ void doCalibration(){
 	}
 	LED_A_ON;
 	LED_B_ON;
-	// Now just a delay for 2 secind
+	// Now just a delay for 2 seconds
 	mDelay(2000);
 	// about 10 blinks for capturing high signal
 	for(uint8_t i=0;i<10;i++){
@@ -267,8 +265,7 @@ void doCalibration(){
 		}
 		LED_A_OFF;
 		LED_B_OFF;
-		tmr_tmp = millis();
-		while((tmr_tmp+100)>millis()){}
+		mDelay(100);
 	}
 	// Now it is time to store values to EEPROM
 	LED_A_ON;
@@ -282,8 +279,6 @@ void doCalibration(){
 
 #endif
 }
-
-
 
 void mDelay(int dtmp){
 	unsigned long tmp = millis();
