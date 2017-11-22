@@ -80,12 +80,12 @@ void setupPins() {
 void setup()
 {
 	// First lets read RESET Flag; Power (bit0), Reset (bit 1), etc
-	byte RESET_value = MCUSR;
+	uint8_t RESET_value = MCUSR;
 	MCUSR = 0;	// reset flag for nect use
 	
 	setupPins();
 
-	byte last_RESET_value = EEPROM.read(EEPROM_RESET_FLAG_ADDR);
+	uint8_t last_RESET_value = EEPROM.read(EEPROM_RESET_FLAG_ADDR);
 	EEPROM.update(EEPROM_RESET_FLAG_ADDR, RESET_value);	// Only update if value is changed
 
 	// should we enter calibration mode
@@ -141,7 +141,7 @@ void updateRssi() {
  
 	analogRead(PIN_RSSI_B);
 	rssiB.raw = analogRead(PIN_RSSI_B);
-  rssiB.mapped = remapRawRssiValue(rssiA);
+  rssiB.mapped = remapRawRssiValue(rssiB);
 }
 	
 void switchDiversity() {
@@ -239,7 +239,7 @@ void doCalibration(){
 		}
 	}
 	// Now wait until RSSI will jump for a good degree (100 ADC values) for both receivers
-	while((rssiA.raw<curMinRSSIA+100) && (rssiB.raw<curMinRSSIB+100)){
+	while((rssiA.raw<curMinRSSIA+100) || (rssiB.raw<curMinRSSIB+100)){
 		LED_A_ON;
 		LED_B_ON;
 		mDelay(100);
