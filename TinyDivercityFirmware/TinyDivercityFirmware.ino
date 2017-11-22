@@ -30,20 +30,21 @@
 
 uint8_t activeReceiver;
 uint8_t diversityTargetReceiver;
-uint8_t rssiA = 0;
-uint16_t rssiARaw = 0;
-uint8_t rssiB = 0;
-uint16_t rssiBRaw = 0;
 
-uint16_t rssiAMin;
-uint16_t rssiAMax;
-uint16_t rssiBMin;
-uint16_t rssiBMax;
+typedef struct {
+  uint16_t min;
+  uint16_t max;
+  uint16_t raw = 0;
+  uint8_t mapped = 0;
+} RSSI;
+
+RSSI rssiA;
+RSSI rssiB;
 
 unsigned long diversityHysteresisTimer;
 
 
-enum ReceiverSelelct: byte {RX_A, RX_B};
+enum ReceiverSelect: byte {RX_A, RX_B};
 
 // some macros
 #define LED_A_ON bitClear(PORTB, PIN_LED_A) // LED A ON
@@ -54,7 +55,7 @@ enum ReceiverSelelct: byte {RX_A, RX_B};
 
 void setupPins() {
 
-    bitSet(DDRB, PIN_SWITCH_VIDEO);
+  bitSet(DDRB, PIN_SWITCH_VIDEO);
 	bitSet(DDRB, PIN_LED_A);
 	bitSet(DDRB, PIN_LED_B);
 	LED_A_OFF;
@@ -106,7 +107,7 @@ void setup()
 
 }
 
-void setActiveReceiver(ReceiverSelelct Set_RX){
+void setActiveReceiver(ReceiverSelect Set_RX){
 	activeReceiver = Set_RX;
 	if(activeReceiver == RX_A){
 		bitClear(PORTB, PIN_SWITCH_VIDEO);
@@ -119,40 +120,33 @@ void setActiveReceiver(ReceiverSelelct Set_RX){
 	}
 }
 
+uint8_t remapRawRssiValue(RSSI rssi) {
+  return constrain(
+    map(
+      rssi.raw,
+      rssi.min,
+      rssi.max,
+      0,
+      100
+    ),
+    0,
+    100
+  );
+}
 
-uint16_t updateRssi() {
+void updateRssi() {
 	analogRead(PIN_RSSI_A); // Fake read to let ADC settle.
-	rssiARaw = analogRead(PIN_RSSI_A);
+	rssiA.raw = analogRead(PIN_RSSI_A);
+  rssiA.mapped = remapRawRssiValue(rssiA);
+ 
 	analogRead(PIN_RSSI_B);
-	rssiBRaw = analogRead(PIN_RSSI_B);
-
-	rssiA = constrain(
-		map(
-			rssiARaw,
-			rssiAMin,
-			rssiAMax,
-			0,
-			100
-		),
-		0,
-		100
-	);
-	rssiB = constrain(
-		map(
-			rssiBRaw,
-			rssiBMin,
-			rssiBMax,
-			0,
-			100
-		),
-		0,
-		100
-	);
+	rssiB.raw = analogRead(PIN_RSSI_B);
+  rssiB.mapped = remapRawRssiValue(rssiA);
 }
 	
 void switchDiversity() {
 
-	int8_t rssiDiff = (int8_t) rssiA - (int8_t) rssiB;
+	int8_t rssiDiff = (int8_t) rssiA.mapped - (int8_t) rssiB.mapped;
 	uint8_t rssiDiffAbs = abs(rssiDiff);
 	uint8_t currentBestReceiver;
 	uint8_t nextReceiver;
@@ -191,10 +185,10 @@ void loop() {
 }
 
 void readEEPROMSettings(){
-	rssiAMin=readEEPROMint(EEPROM_MIN_RSSI_A_ADDR);
-	rssiAMax=readEEPROMint(EEPROM_MAX_RSSI_A_ADDR);
-	rssiBMin=readEEPROMint(EEPROM_MIN_RSSI_B_ADDR);
-	rssiBMax=readEEPROMint(EEPROM_MAX_RSSI_B_ADDR);
+	rssiA.min=readEEPROMint(EEPROM_MIN_RSSI_A_ADDR);
+	rssiA.max=readEEPROMint(EEPROM_MAX_RSSI_A_ADDR);
+	rssiB.min=readEEPROMint(EEPROM_MIN_RSSI_B_ADDR);
+	rssiB.max=readEEPROMint(EEPROM_MAX_RSSI_B_ADDR);
 }
 
 int readEEPROMint(uint8_t addr){
@@ -240,12 +234,12 @@ void doCalibration(){
 		tmr_tmp = millis();
 		while((tmr_tmp+700)>millis()){
 			updateRssi();	// refresh RSSI RAW values
-			if(rssiARaw<curMinRSSIA)curMinRSSIA = rssiARaw;
-			if(rssiBRaw<curMinRSSIB)curMinRSSIB = rssiBRaw;
+			if(rssiA.raw<curMinRSSIA)curMinRSSIA = rssiA.raw;
+			if(rssiB.raw<curMinRSSIB)curMinRSSIB = rssiB.raw;
 		}
 	}
 	// Now wait until RSSI will jump for a good degree (100 ADC values) for both receivers
-	while((rssiARaw<curMinRSSIA+100) && (rssiBRaw<curMinRSSIB+100)){
+	while((rssiA.raw<curMinRSSIA+100) && (rssiB.raw<curMinRSSIB+100)){
 		LED_A_ON;
 		LED_B_ON;
 		mDelay(100);
@@ -265,8 +259,8 @@ void doCalibration(){
 		tmr_tmp = millis();
 		while((tmr_tmp+700)>millis()){
 			updateRssi();	// refresh RSSI RAW values
-			if(rssiARaw>curMaxRSSIA)curMaxRSSIA = rssiARaw;
-			if(rssiBRaw>curMaxRSSIB)curMaxRSSIB = rssiBRaw;
+			if(rssiA.raw>curMaxRSSIA)curMaxRSSIA = rssiA.raw;
+			if(rssiB.raw>curMaxRSSIB)curMaxRSSIB = rssiB.raw;
 		}
 		LED_A_OFF;
 		LED_B_OFF;
