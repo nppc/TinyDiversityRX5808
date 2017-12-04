@@ -81,20 +81,16 @@ F 3 "" H 5550 2850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR12
+L GND #PWR11
 U 1 1 5A0C59D1
 P 7000 3700
-F 0 "#PWR12" H 7000 3450 50  0001 C CNN
+F 0 "#PWR11" H 7000 3450 50  0001 C CNN
 F 1 "GND" H 7000 3550 50  0000 C CNN
 F 2 "" H 7000 3700 50  0001 C CNN
 F 3 "" H 7000 3700 50  0001 C CNN
 	1    7000 3700
 	1    0    0    -1  
 $EndComp
-Text Label 6350 2650 2    60   ~ 0
-VideoA
-Text Label 6350 2450 2    60   ~ 0
-VideoB
 Text Label 2800 3950 2    60   ~ 0
 VideoOut
 Text Label 4700 2650 0    60   ~ 0
@@ -115,14 +111,14 @@ F 3 "" H 2550 2800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L VCC #PWR11
+L VCC #PWR13
 U 1 1 5A0C6148
-P 7000 2250
-F 0 "#PWR11" H 7000 2100 50  0001 C CNN
-F 1 "VCC" H 7000 2400 50  0000 C CNN
-F 2 "" H 7000 2250 50  0001 C CNN
-F 3 "" H 7000 2250 50  0001 C CNN
-	1    7000 2250
+P 7600 2850
+F 0 "#PWR13" H 7600 2700 50  0001 C CNN
+F 1 "VCC" H 7600 3000 50  0000 C CNN
+F 2 "" H 7600 2850 50  0001 C CNN
+F 3 "" H 7600 2850 50  0001 C CNN
+	1    7600 2850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -362,10 +358,6 @@ Wire Wire Line
 Wire Wire Line
 	3900 2450 5250 2450
 Wire Wire Line
-	5850 2650 6350 2650
-Wire Wire Line
-	5850 2450 6350 2450
-Wire Wire Line
 	5250 2650 4700 2650
 Wire Wire Line
 	3500 3400 4300 3400
@@ -566,10 +558,10 @@ Wire Wire Line
 Connection ~ 7450 4600
 Connection ~ 7450 4700
 $Comp
-L GND #PWR13
+L GND #PWR12
 U 1 1 5A0DC14E
 P 7450 4850
-F 0 "#PWR13" H 7450 4600 50  0001 C CNN
+F 0 "#PWR12" H 7450 4600 50  0001 C CNN
 F 1 "GND" H 7450 4700 50  0000 C CNN
 F 2 "" H 7450 4850 50  0001 C CNN
 F 3 "" H 7450 4850 50  0001 C CNN
@@ -653,13 +645,13 @@ Connection ~ 5550 2050
 $Comp
 L Jumper JP1
 U 1 1 5A0DEF62
-P 7000 2550
-F 0 "JP1" H 7000 2700 50  0000 C CNN
-F 1 "Jumper" H 7000 2470 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 7000 2550 50  0001 C CNN
-F 3 "" H 7000 2550 50  0001 C CNN
-	1    7000 2550
-	0    1    1    0   
+P 7300 2850
+F 0 "JP1" H 7300 3000 50  0000 C CNN
+F 1 "Jumper" H 7300 2770 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 7300 2850 50  0001 C CNN
+F 3 "" H 7300 2850 50  0001 C CNN
+	1    7300 2850
+	-1   0    0    1   
 $EndComp
 Connection ~ 7000 2850
 Wire Wire Line
@@ -680,4 +672,46 @@ Wire Wire Line
 Text Label 7100 4000 0    60   ~ 0
 RST
 Connection ~ 7600 4000
+$Comp
+L Jumper JP2
+U 1 1 5A25249A
+P 7300 2050
+F 0 "JP2" H 7300 2200 50  0000 C CNN
+F 1 "JVB" H 7300 1970 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 7300 2050 50  0001 C CNN
+F 3 "" H 7300 2050 50  0001 C CNN
+	1    7300 2050
+	-1   0    0    1   
+$EndComp
+$Comp
+L Jumper JP3
+U 1 1 5A252514
+P 7300 2400
+F 0 "JP3" H 7300 2550 50  0000 C CNN
+F 1 "JWA" H 7300 2320 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 7300 2400 50  0001 C CNN
+F 3 "" H 7300 2400 50  0001 C CNN
+	1    7300 2400
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5850 2450 6750 2450
+Wire Wire Line
+	6750 2450 6750 2050
+Wire Wire Line
+	6750 2050 7000 2050
+Wire Wire Line
+	7600 2050 8050 2050
+Text Label 8050 2050 2    60   ~ 0
+VideoB
+Wire Wire Line
+	7600 2400 8050 2400
+Text Label 8050 2400 2    60   ~ 0
+VideoA
+Wire Wire Line
+	5850 2650 6900 2650
+Wire Wire Line
+	6900 2650 6900 2400
+Wire Wire Line
+	6900 2400 7000 2400
 $EndSCHEMATC
