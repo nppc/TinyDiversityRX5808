@@ -7,7 +7,7 @@
 
 // RSSI strength should be greater than the value below (percent) over the
 // other receiver before we switch. This pervents flicker when RSSI values
-// are close and delays diversity checks counter.
+// are close
 #define DIVERSITY_HYSTERESIS 2
 
 // How long (ms) the RSSI strength has to have a greater difference than the
@@ -16,9 +16,9 @@
 
 
 #define PIN_SWITCH_VIDEO 	0	//PB0
-#define PIN_LED_A 			1	//PB1
-#define PIN_LED_B 			3 	//PB3
-#define PIN_RSSI_A 			2	//PB2
+#define PIN_LED_A 			2 	//PB2
+#define PIN_LED_B 			1	//PB1
+#define PIN_RSSI_A 			3	//PB3
 #define PIN_RSSI_B 			4	//PB4
 
 // don't use first byte of EEPROM. It can be corrupted
