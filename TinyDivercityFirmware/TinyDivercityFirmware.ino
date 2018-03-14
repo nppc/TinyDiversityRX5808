@@ -17,14 +17,14 @@
 // Calibration for Max RSSI value will start 
 // after the RSSI ADC value will be higher than 
 // min RSSI ADC value plus CALIBRATION_ADC_DIFFERENCE.
-#define CALIBRATION_ADC_DIFFERENCE 50
+#define CALIBRATION_ADC_DIFFERENCE 100
 
 
 #define PIN_SWITCH_VIDEO 	0	//PB0
 #define PIN_LED_A 			2 	//PB2
 #define PIN_LED_B 			1	//PB1
-#define PIN_RSSI_A 			3	//PB3
-#define PIN_RSSI_B 			4	//PB4
+#define PIN_RSSI_A 			A3	//PB3
+#define PIN_RSSI_B 			A2	//PB4
 
 // don't use first byte of EEPROM. It can be corrupted
 #define EEPROM_RESET_FLAG_ADDR	5	// RESET Flag (byte)
@@ -33,14 +33,16 @@
 #define EEPROM_MIN_RSSI_B_ADDR	11	// RSSI RAW Calibration value (int)
 #define EEPROM_MAX_RSSI_B_ADDR	13	// RSSI RAW Calibration value (int)
 
+#define INTERNAL2V56_NO_CAP (6)
+
 uint8_t activeReceiver;
 uint8_t diversityTargetReceiver;
 
 typedef struct {
-  uint16_t min;
-  uint16_t max;
-  uint16_t raw = 0;
-  uint8_t mapped = 0;
+  int min;
+  int max;
+  int raw;
+  uint8_t mapped;
 } RSSI;
 
 RSSI rssiA;
@@ -65,21 +67,6 @@ void setupPins() {
 	bitSet(DDRB, PIN_LED_B);
 	LED_A_OFF;
 	LED_B_OFF;
-	bitSet(PORTB, PIN_LED_B);
-	bitSet(PORTB, PIN_RSSI_A);
-	bitSet(PORTB, PIN_RSSI_B);
-	bitClear(DDRB,PIN_RSSI_A);
-	bitClear(DDRB,PIN_RSSI_B);
-
-/*
-	pinMode(PIN_SWITCH_VIDEO, OUTPUT);
-    pinMode(PIN_LED_A, OUTPUT);
-    pinMode(PIN_LED_B, OUTPUT);
-	digitalWrite(PIN_LED_A, HIGH); // Off
-	digitalWrite(PIN_LED_B, HIGH); // Off
-    pinMode(PIN_RSSI_A, INPUT_PULLUP);
-    pinMode(PIN_RSSI_B, INPUT_PULLUP);
-*/
 }
 
 void setup()
@@ -87,6 +74,9 @@ void setup()
 	// First lets read RESET Flag; Power (bit0), Reset (bit 1), etc
 	uint8_t RESET_value = MCUSR;
 	MCUSR = 0;	// reset flag for nect use
+	
+	//analogReference(INTERNAL2V56_NO_CAP);
+	analogReference(INTERNAL);	// 1.1v
 	
 	setupPins();
 
@@ -109,6 +99,7 @@ void setup()
 	diversityTargetReceiver = activeReceiver;	// Initialize variable for diversity switching
 	
 	readEEPROMSettings();
+	updateRssi();	// Initialize variables
 
 }
 
@@ -142,11 +133,11 @@ uint8_t remapRawRssiValue(RSSI rssi) {
 void updateRssi() {
 	analogRead(PIN_RSSI_A); // Fake read to let ADC settle.
 	rssiA.raw = analogRead(PIN_RSSI_A);
-  rssiA.mapped = remapRawRssiValue(rssiA);
+	rssiA.mapped = remapRawRssiValue(rssiA);
  
 	analogRead(PIN_RSSI_B);
 	rssiB.raw = analogRead(PIN_RSSI_B);
-  rssiB.mapped = remapRawRssiValue(rssiB);
+	rssiB.mapped = remapRawRssiValue(rssiB);
 }
 	
 void switchDiversity() {
@@ -217,11 +208,15 @@ void doCalibration(){
 */
 		// show ADC values divided by 20.
 		int tmp;
+		mDelay(2000);
+		LED_A_ON;
+		LED_B_ON;
+		mDelay(700);
 		LED_A_OFF;
 		LED_B_OFF;
 		mDelay(2000);
 		updateRssi();
-		tmp = rssiA.raw / 20;
+		tmp = rssiA.raw / 64;
 		for(int i=0;i<tmp;i++){
 			LED_A_ON;
 			mDelay(100);
@@ -230,7 +225,7 @@ void doCalibration(){
 		}
 		mDelay(2000);
 		updateRssi();
-		tmp = rssiB.raw / 20;
+		tmp = rssiB.raw / 64;
 		for(int i=0;i<tmp;i++){
 			LED_B_ON;
 			mDelay(100);
