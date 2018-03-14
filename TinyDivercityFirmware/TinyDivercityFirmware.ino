@@ -8,11 +8,11 @@
 // RSSI strength should be greater than the value below (percent) over the
 // other receiver before we switch. This pervents flicker when RSSI values
 // are close
-#define DIVERSITY_HYSTERESIS 2
+#define DIVERSITY_HYSTERESIS 3
 
 // How long (ms) the RSSI strength has to have a greater difference than the
 // above before switching.
-#define DIVERSITY_HYSTERESIS_PERIOD 10
+#define DIVERSITY_HYSTERESIS_PERIOD 100
 
 // Calibration for Max RSSI value will start 
 // after the RSSI ADC value will be higher than 
@@ -201,11 +201,12 @@ void doCalibration(){
 #if defined(DEBUG)
 	// switch video source every second in DEBUG mode
 	while(1==1){
-/*		mDelay(1000);
+		mDelay(1000);
 		setActiveReceiver(RX_A);
 		mDelay(1000);
 		setActiveReceiver(RX_B);
-*/
+
+/*
 		// show ADC values divided by 20.
 		int tmp;
 		mDelay(2000);
@@ -232,6 +233,7 @@ void doCalibration(){
 			LED_B_OFF;
 			mDelay(400);
 		}
+*/
 	}
 
 #else
