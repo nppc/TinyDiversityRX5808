@@ -14,6 +14,11 @@
 // above before switching.
 #define DIVERSITY_HYSTERESIS_PERIOD 10
 
+// Calibration for Max RSSI value will start 
+// after the RSSI ADC value will be higher than 
+// min RSSI ADC value plus CALIBRATION_ADC_DIFFERENCE.
+#define CALIBRATION_ADC_DIFFERENCE 50
+
 
 #define PIN_SWITCH_VIDEO 	0	//PB0
 #define PIN_LED_A 			2 	//PB2
@@ -205,12 +210,33 @@ void doCalibration(){
 #if defined(DEBUG)
 	// switch video source every second in DEBUG mode
 	while(1==1){
-		//delay(1000);
-		mDelay(1000);
+/*		mDelay(1000);
 		setActiveReceiver(RX_A);
-		//delay(1000);
 		mDelay(1000);
 		setActiveReceiver(RX_B);
+*/
+		// show ADC values divided by 20.
+		int tmp;
+		LED_A_OFF;
+		LED_B_OFF;
+		mDelay(2000);
+		updateRssi();
+		tmp = rssiA.raw / 20;
+		for(int i=0;i<tmp;i++){
+			LED_A_ON;
+			mDelay(100);
+			LED_A_OFF;
+			mDelay(400);
+		}
+		mDelay(2000);
+		updateRssi();
+		tmp = rssiB.raw / 20;
+		for(int i=0;i<tmp;i++){
+			LED_B_ON;
+			mDelay(100);
+			LED_B_OFF;
+			mDelay(400);
+		}
 	}
 
 #else
@@ -238,8 +264,8 @@ void doCalibration(){
 			if(rssiB.raw<curMinRSSIB)curMinRSSIB = rssiB.raw;
 		}
 	}
-	// Now wait until RSSI will jump for a good degree (100 ADC values) for both receivers
-	while((rssiA.raw<curMinRSSIA+100) || (rssiB.raw<curMinRSSIB+100)){
+	// Now wait until RSSI will jump for a good degree (CALIBRATION_ADC_DIFFERENCE ADC values) for both receivers
+	while((rssiA.raw<curMinRSSIA+CALIBRATION_ADC_DIFFERENCE) || (rssiB.raw<curMinRSSIB+CALIBRATION_ADC_DIFFERENCE)){
 		LED_A_ON;
 		LED_B_ON;
 		mDelay(100);
