@@ -61,8 +61,7 @@ enum ReceiverSelect: byte {RX_A, RX_B};
 
 
 void setupPins() {
-
-  bitSet(DDRB, PIN_SWITCH_VIDEO);
+	bitSet(DDRB, PIN_SWITCH_VIDEO);
 	bitSet(DDRB, PIN_LED_A);
 	bitSet(DDRB, PIN_LED_B);
 	LED_A_OFF;
@@ -117,17 +116,7 @@ void setActiveReceiver(ReceiverSelect Set_RX){
 }
 
 uint8_t remapRawRssiValue(RSSI rssi) {
-  return constrain(
-    map(
-      rssi.raw,
-      rssi.min,
-      rssi.max,
-      0,
-      100
-    ),
-    0,
-    100
-  );
+  return constrain(map(rssi.raw, rssi.min, rssi.max, 0, 100), 0, 100);
 }
 
 void updateRssi() {
@@ -135,7 +124,7 @@ void updateRssi() {
 	rssiA.raw = analogRead(PIN_RSSI_A);
 	rssiA.mapped = remapRawRssiValue(rssiA);
  
-	analogRead(PIN_RSSI_B);
+	analogRead(PIN_RSSI_B); // Fake read to let ADC settle.
 	rssiB.raw = analogRead(PIN_RSSI_B);
 	rssiB.mapped = remapRawRssiValue(rssiB);
 }
@@ -239,16 +228,17 @@ void doCalibration(){
 #else
 	// Calibration routine
 	// 1. Wait for lowest RSSI while some period (short blinks). Record min value.
-	// 2. If RSSI changed drammatically, then wait a bit (2 seconds)
-	// 3. Wait for highrst RSSI while some period (long blinks). Record max value.
-	// 4. Store calibration data in EEPROM
+	// 2. Now LEDs are ON. Wait for VTX powered ON. 
+	// 3. If RSSI changed dramatically, then wait 2 seconds (LEDs are ON).
+	// 4. Wait for highest RSSI while some period (long blinks). Record max value.
+	// 5. Store calibration data in EEPROM (LEDs are OFF).
 	unsigned long tmr_tmp;
-	uint16_t curMinRSSIA=1023; // max 10 bit ADC value is 1023
-	uint16_t curMinRSSIB=1023; // max 10 bit ADC value is 1023
-	uint16_t curMaxRSSIA=0;
-	uint16_t curMaxRSSIB=0;
-	// about 10 blinks for capturing low signal
-	for(uint8_t i=0;i<10;i++){
+	int curMinRSSIA=1023; // max 10 bit ADC value is 1023
+	int curMinRSSIB=1023; // max 10 bit ADC value is 1023
+	int curMaxRSSIA=0;
+	int curMaxRSSIB=0;
+	// 5 short blinks for capturing low signal
+	for(uint8_t i=0;i<5;i++){
 		LED_A_ON;
 		LED_B_ON;
 		mDelay(100);
@@ -262,25 +252,19 @@ void doCalibration(){
 		}
 	}
 	// Now wait until RSSI will jump for a good degree (CALIBRATION_ADC_DIFFERENCE ADC values) for both receivers
-	while((rssiA.raw<curMinRSSIA+CALIBRATION_ADC_DIFFERENCE) || (rssiB.raw<curMinRSSIB+CALIBRATION_ADC_DIFFERENCE)){
-		LED_A_ON;
-		LED_B_ON;
-		mDelay(100);
-		LED_A_OFF;
-		LED_B_OFF;
-		mDelay(1500);
-		updateRssi();
-	}
 	LED_A_ON;
 	LED_B_ON;
-	// Now just a delay for 2 seconds
-	mDelay(2000);
-	// about 10 blinks for capturing high signal
-	for(uint8_t i=0;i<10;i++){
+	while((rssiA.raw<curMinRSSIA+CALIBRATION_ADC_DIFFERENCE) || (rssiB.raw<curMinRSSIB+CALIBRATION_ADC_DIFFERENCE)){
+		mDelay(100);
+		updateRssi();
+	}
+	mDelay(2000); // Delay for 2 seconds for VTX stabilize
+	// 5 long blinks for capturing high signal
+	for(uint8_t i=0;i<5;i++){
 		LED_A_ON;
 		LED_B_ON;
 		tmr_tmp = millis();
-		while((tmr_tmp+700)>millis()){
+		while((tmr_tmp+900)>millis()){
 			updateRssi();	// refresh RSSI RAW values
 			if(rssiA.raw>curMaxRSSIA)curMaxRSSIA = rssiA.raw;
 			if(rssiB.raw>curMaxRSSIB)curMaxRSSIB = rssiB.raw;
@@ -290,14 +274,11 @@ void doCalibration(){
 		mDelay(100);
 	}
 	// Now it is time to store values to EEPROM
-	LED_A_ON;
-	LED_B_ON;
 	writeEEPROMint(EEPROM_MIN_RSSI_A_ADDR,curMinRSSIA);
 	writeEEPROMint(EEPROM_MAX_RSSI_A_ADDR,curMaxRSSIA);
 	writeEEPROMint(EEPROM_MIN_RSSI_B_ADDR,curMinRSSIB);
 	writeEEPROMint(EEPROM_MAX_RSSI_B_ADDR,curMaxRSSIB);
-	LED_A_OFF;
-	LED_B_OFF;
+	mDelay(2000);	// wait before exit from Calibration
 
 #endif
 }
