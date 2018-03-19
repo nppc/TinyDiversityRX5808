@@ -2,10 +2,12 @@
 
 ![Virtual PCB](Images/PCB_KiCad1.jpg)
 ![Virtual PCB](Images/PCB_KiCad2.jpg)
+
 PCB can be ordered here: https://oshpark.com/shared_projects/ZRMoFzeY
 
 ## Proof of concept
-- Bench test: https://www.youtube.com/watch?v=jwpYg-zWEIs
+- Diversity bench test: https://www.youtube.com/watch?v=jwpYg-zWEIs
+- Band/channel change and auto-search test: https://www.youtube.com/watch?v=jH8NeLfK5f4
 
 ![EV100 Inside](Images/tVRX_fitting.jpg)
 
