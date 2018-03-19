@@ -1,7 +1,13 @@
 # Tiny 5.8GHz Diversity VRX for EV100 Googles
 
+![Virtual PCB](Images/PCB_KiCad1.jpg)
+![Virtual PCB](Images/PCB_KiCad2.jpg)
+
+
 ## Proof of concept
 - Bench test: https://www.youtube.com/watch?v=jwpYg-zWEIs
+
+![EV100 Inside](Images/tVRX_fitting.jpg)
 
 ## Calibration
 - Power OFF VTX.
