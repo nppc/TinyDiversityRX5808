@@ -1,4 +1,7 @@
-# Tiny 5.8Ghz Diversity VRX for EV100 Googles
+# Tiny 5.8GHz Diversity VRX for EV100 Googles
+
+## Proof of concept
+- Bench test: https://www.youtube.com/watch?v=jwpYg-zWEIs
 
 ## Calibration
 - Power OFF VTX.
