@@ -2,7 +2,7 @@
 
 ![Virtual PCB](Images/PCB_KiCad1.jpg)
 ![Virtual PCB](Images/PCB_KiCad2.jpg)
-
+PCB can be ordered here: https://oshpark.com/shared_projects/ZRMoFzeY
 
 ## Proof of concept
 - Bench test: https://www.youtube.com/watch?v=jwpYg-zWEIs
