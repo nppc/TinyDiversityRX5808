@@ -8,3 +8,5 @@
 - After about 2 seconds LEDs will make 5 long (900ms) blinks indicating that highest video signal detection in progress.
 - When LEDs turn OFF for 2 seconds, then Calibration is done.
 - Now tVRX will exit from Calibration mode and go to normal state.
+
+Discussion on RCG: https://www.rcgroups.com/forums/showthread.php?3051872-DIY-Tiny-Diversity-VRX-for-EV100-Googles
