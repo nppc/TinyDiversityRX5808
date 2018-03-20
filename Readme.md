@@ -20,4 +20,4 @@ PCB can be ordered here: https://oshpark.com/shared_projects/ZRMoFzeY
 - When LEDs turn OFF for 2 seconds, then Calibration is done.
 - Now tVRX will exit from Calibration mode and go to normal state.
 
-Discussion on RCG: https://www.rcgroups.com/forums/showthread.php?3051872-DIY-Tiny-Diversity-VRX-for-EV100-Googles
+Discussion on RCG: https://www.rcgroups.com/forums/showthread.php?3051872-DIY-Tiny-Diversity-VRX-for-EV100-Goggles
