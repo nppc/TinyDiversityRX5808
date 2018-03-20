@@ -1,4 +1,4 @@
-# Tiny 5.8GHz Diversity VRX for EV100 Googles
+# Tiny 5.8GHz Diversity VRX for EV100 Goggles
 
 ![Virtual PCB](Images/PCB_KiCad1.jpg)
 ![Virtual PCB](Images/PCB_KiCad2.jpg)
@@ -13,7 +13,7 @@ PCB can be ordered here: https://oshpark.com/shared_projects/ZRMoFzeY
 
 ## Calibration
 - Power OFF VTX.
-- Power ON Googles and then press button on tVRX.
+- Power ON Goggles and then press button on tVRX.
 - LEDs will make 5 short (100ms) blinks indicating, that lowest video signal detection in progress.
 - When LEDs will stay lit, then power ON VTX.
 - After about 2 seconds LEDs will make 5 long (900ms) blinks indicating that highest video signal detection in progress.
