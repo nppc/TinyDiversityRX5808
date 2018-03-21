@@ -20,4 +20,13 @@ PCB can be ordered here: https://oshpark.com/shared_projects/An2v0djk
 - When LEDs turn OFF for 2 seconds, then Calibration is done.
 - Now tVRX will exit from Calibration mode and go to normal state.
 
+## Compiling
+Use latest Arduino IDE.
+You need to add ATtiny Support to Arduino IDE (Google the Internet). :)
+In Arduino IDE Clock should be left as default = 1MHz (internal).
+In this project we don't use Arduino bootloader. So, you need to export compiled binary from IDE and flash it with external programmer like Avrasp.
+Programming pads on tVRX:
+![tVRX ISP](Images/tVRX_isp.jpg)
+All fuses leave default.
+
 Discussion on RCG: https://www.rcgroups.com/forums/showthread.php?3051872-DIY-Tiny-Diversity-VRX-for-EV100-Goggles
