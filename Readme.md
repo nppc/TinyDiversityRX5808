@@ -24,7 +24,7 @@ PCB can be ordered here: https://oshpark.com/shared_projects/An2v0djk
 Use latest Arduino IDE.
 You need to add ATtiny Support to Arduino IDE (Google the Internet). :)
 In Arduino IDE Clock should be left as default = 1MHz (internal).
-In this project we don't use Arduino bootloader. So, you need to export compiled binary from IDE and flash it with external programmer like Avrasp.
+In this project we don't use Arduino bootloader. So, you need to export compiled binary from IDE and flash it with external programmer like USBasp.
 Programming pads on tVRX:
 ![tVRX ISP](Images/tVRX_isp.jpg)
 All fuses leave default.
