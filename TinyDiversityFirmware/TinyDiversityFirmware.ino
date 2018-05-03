@@ -6,7 +6,7 @@
 //#define MIN_TUNE_TIME 25 // update RSSI values every 25ms
 
 // RSSI strength should be greater than the value below (percent) over the
-// other receiver before we switch. This pervents flicker when RSSI values
+// other receiver before we switch. This prevents flicker when RSSI values
 // are close
 #define DIVERSITY_HYSTERESIS 2
 
@@ -166,7 +166,7 @@ void switchDiversity() {
 void loop() {
     // Update RSSI values as fast as possible.
 	updateRssi();
-	switchDiversity(); // Will switch only if signals are significally different and difference stays for a while.
+	switchDiversity(); // Will switch only if signals are significantly different and difference stays for a while.
 }
 
 void readEEPROMSettings(){
@@ -188,7 +188,7 @@ void writeEEPROMint(uint8_t addr, uint16_t value){
 void doCalibration(){
 
 #if defined(DEBUG)
-	// switch video source every second in DEBUG mode
+	// switch video source every 4 seconds in DEBUG mode
 	while(1==1){
 		mDelay(4000);
 		setActiveReceiver(RX_A);
