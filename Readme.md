@@ -1,4 +1,11 @@
 # Tiny 5.8GHz Diversity VRX for EV100 Goggles
+Sample video, showing diversity in work (for example at 1:42).
+
+Recording taken with [Eachine Pro DVR integrated in to the EV100 goggles](https://github.com/nppc/VideoSwitchDVR).
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/wFIAKiWohQQ/0.jpg)](https://youtu.be/wFIAKiWohQQ)
+
+3D rendering of the board:
 
 ![Virtual PCB](Images/PCB_KiCad1.jpg)
 ![Virtual PCB](Images/PCB_KiCad2.jpg)
