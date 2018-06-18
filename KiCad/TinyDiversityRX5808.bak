@@ -347,15 +347,23 @@ Wire Wire Line
 Wire Wire Line
 	3750 3600 4300 3600
 Wire Wire Line
-	5300 2050 7000 2050
+	5300 2050 5550 2050
+Wire Wire Line
+	5550 2050 7000 2050
 Wire Wire Line
 	5550 2050 5550 2250
 Connection ~ 5300 2050
 Wire Wire Line
-	5000 1750 5000 2200
+	5000 1750 5000 2050
+Wire Wire Line
+	5000 2050 5000 2200
 Connection ~ 5000 2050
 Wire Wire Line
-	7000 2050 7000 3300
+	7000 2050 7000 2850
+Wire Wire Line
+	7000 2850 7000 3200
+Wire Wire Line
+	7000 3200 7000 3300
 Wire Wire Line
 	7000 3300 7350 3300
 Wire Wire Line
@@ -373,7 +381,9 @@ Wire Wire Line
 Wire Wire Line
 	2950 5050 2950 4650
 Wire Wire Line
-	2800 4650 4250 4650
+	2800 4650 2950 4650
+Wire Wire Line
+	2950 4650 4250 4650
 Wire Wire Line
 	4250 4650 4250 5050
 Wire Wire Line
@@ -408,9 +418,13 @@ Wire Wire Line
 	2500 4650 2400 4650
 Connection ~ 2950 4650
 Wire Wire Line
-	2800 4550 4350 4550
+	2800 4550 3050 4550
 Wire Wire Line
-	2800 4450 4450 4450
+	3050 4550 4350 4550
+Wire Wire Line
+	2800 4450 3150 4450
+Wire Wire Line
+	3150 4450 4450 4450
 Wire Wire Line
 	2400 4250 3050 4250
 Wire Wire Line
@@ -418,12 +432,16 @@ Wire Wire Line
 Wire Wire Line
 	3750 3600 3750 3750
 Wire Wire Line
-	2950 4050 3750 4050
+	2950 4050 3500 4050
+Wire Wire Line
+	3500 4050 3750 4050
 Connection ~ 3500 4050
 Wire Wire Line
 	2950 4350 2400 4350
 Wire Wire Line
-	2950 3850 2950 4350
+	2950 3850 2950 4050
+Wire Wire Line
+	2950 4050 2950 4350
 Wire Wire Line
 	2400 3950 2800 3950
 Wire Wire Line
@@ -458,7 +476,9 @@ Wire Wire Line
 Text Label 3900 4850 2    60   ~ 0
 AUD_OUT
 Wire Wire Line
-	3250 5000 4000 5000
+	3250 5000 3750 5000
+Wire Wire Line
+	3750 5000 4000 5000
 Connection ~ 3750 5000
 $Comp
 L R R8
@@ -490,7 +510,9 @@ Wire Wire Line
 Wire Wire Line
 	4550 5050 4550 5000
 Wire Wire Line
-	4550 5000 5300 5000
+	4550 5000 5050 5000
+Wire Wire Line
+	5050 5000 5300 5000
 Wire Wire Line
 	5050 5000 5050 5050
 Connection ~ 5050 5000
@@ -501,23 +523,17 @@ Connection ~ 3150 4450
 Connection ~ 3050 4550
 Text Label 3900 2450 0    60   ~ 0
 MOSI
-Text Label 6700 4500 0    60   ~ 0
+Text Label 7100 4650 0    60   ~ 0
 MOSI
 Wire Wire Line
 	4300 3700 4300 3950
 Text Label 4300 3950 1    60   ~ 0
 RST
-Wire Wire Line
-	6950 4600 6700 4600
-Text Label 6700 4800 0    60   ~ 0
+Text Label 7100 4500 0    60   ~ 0
 RST
-Wire Wire Line
-	6950 4700 6700 4700
-Text Label 6700 4700 0    60   ~ 0
+Text Label 7100 4850 0    60   ~ 0
 SCK
-Wire Wire Line
-	6950 4800 6700 4800
-Text Label 6700 4600 0    60   ~ 0
+Text Label 7100 4750 0    60   ~ 0
 MISO
 Wire Wire Line
 	3100 2800 3350 2800
@@ -561,7 +577,9 @@ MISO
 Wire Wire Line
 	7000 3200 7600 3200
 Wire Wire Line
-	7600 3200 7600 4150
+	7600 3200 7600 4000
+Wire Wire Line
+	7600 4000 7600 4150
 Wire Wire Line
 	7000 2850 7150 2850
 Connection ~ 5550 2050
@@ -597,7 +615,7 @@ L D_Schottky D3
 U 1 1 5A26639F
 P 7300 2850
 F 0 "D3" H 7300 2950 50  0000 C CNN
-F 1 "D_Schottky" H 7300 2750 50  0000 C CNN
+F 1 "B5819WS" H 7300 2750 50  0000 C CNN
 F 2 "Diodes_SMD:D_SOD-323" H 7300 2850 50  0001 C CNN
 F 3 "" H 7300 2850 50  0001 C CNN
 	1    7300 2850
@@ -632,21 +650,6 @@ RSSI_A
 Wire Wire Line
 	3900 2450 5250 2450
 $Comp
-L Conn_01x06 J4
-U 1 1 5A3920B9
-P 7150 4500
-F 0 "J4" H 7150 4800 50  0000 C CNN
-F 1 "Conn_01x06" H 7150 4100 50  0000 C CNN
-F 2 "KiCadCustomLibs:Pads_prog_6pin1.25mm" H 7150 4500 50  0001 C CNN
-F 3 "" H 7150 4500 50  0001 C CNN
-	1    7150 4500
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7600 4150 6950 4150
-Wire Wire Line
-	6950 4150 6950 4300
-$Comp
 L GND #PWR013
 U 1 1 5A392520
 P 6550 4600
@@ -666,7 +669,7 @@ F 1 "SW_Push" H 2900 2740 50  0000 C CNN
 F 2 "KiCadCustomLibs:Button_TS-018" H 2900 3000 50  0001 C CNN
 F 3 "" H 2900 3000 50  0001 C CNN
 	1    2900 2800
-	1    0    0    -1  
+	-1   0    0    1   
 $EndComp
 $Comp
 L ATTINY85-20SU U2
@@ -680,9 +683,41 @@ F 3 "" H 5650 3450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6950 4500 6700 4500
-Wire Wire Line
 	6550 4600 6550 4400
 Wire Wire Line
-	6550 4400 6950 4400
+	6550 4400 7350 4400
+$Comp
+L Conn_01x03 J?
+U 1 1 5B27CDDD
+P 7550 4400
+F 0 "J?" H 7550 4600 50  0000 C CNN
+F 1 "Prog1" H 7750 4400 50  0000 C CNN
+F 2 "KiCadCustomLibs:Pads_prog_3pin1.25mm" H 7550 4400 50  0001 C CNN
+F 3 "" H 7550 4400 50  0001 C CNN
+	1    7550 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Conn_01x03 J?
+U 1 1 5B27CE42
+P 7550 4750
+F 0 "J?" H 7550 4550 50  0000 C CNN
+F 1 "Prog2" H 7750 4750 50  0000 C CNN
+F 2 "KiCadCustomLibs:Pads_prog_3pin1.25mm" H 7550 4750 50  0001 C CNN
+F 3 "" H 7550 4750 50  0001 C CNN
+	1    7550 4750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7600 4150 7350 4150
+Wire Wire Line
+	7350 4150 7350 4300
+Wire Wire Line
+	7350 4500 7100 4500
+Wire Wire Line
+	7350 4650 7100 4650
+Wire Wire Line
+	7350 4750 7100 4750
+Wire Wire Line
+	7350 4850 7100 4850
 $EndSCHEMATC
