@@ -15,3 +15,5 @@ C4 | 10uf | 0603 | 710-885012106006
 D1,D2 | LED | 0805 | 710-150080GS75000
 D3 | B5819WS (or any) | SOD-323 | 833-B5819WS-TP
 Button | 6mm X 7.3mm | https://www.banggood.com/50Pcs-2x4x3_5mm-Tact-Tactile-Push-Button-Switch-SMD-Surface-Mount-Momentary-p-1007736.html
+
+Looks like U1 can be replaced with STG719 if MAX4624 is not available. This is not tested, but footprint is 1 to 1. The resistance is different (4 instead of 1 Ohm).
